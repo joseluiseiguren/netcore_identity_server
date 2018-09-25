@@ -1,0 +1,197 @@
+{
+	"info": {
+		"_postman_id": "007c606c-ffcf-48f9-918c-33308521429f",
+		"name": "ids",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Access Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "authorization",
+						"value": " Basic am9zZXBoMTpwZXBl"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Identity Token",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "authorization",
+						"value": " Basic cm8uY2xpZW50OnNlY3JldA=="
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "alice",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "APIEmployee",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get IDS Configuration",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept-Encoding",
+						"value": "none",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5000/.well-known/openid-configuration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						".well-known",
+						"openid-configuration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Customers",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": " Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImUyZmViMTIzMzhiMWI5MmJjYzVkMGZiMjNhZDQ3ZjdkIiwidHlwIjoiSldUIn0.eyJuYmYiOjE1Mzc4NjUzMzIsImV4cCI6MTUzNzg2NTM5MiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAwIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NTAwMC9yZXNvdXJjZXMiLCJNeVdlYkFQSSJdLCJjbGllbnRfaWQiOiJqb3NlcGgxIiwic2NvcGUiOlsiTXlXZWJBUEkuZW1wbG95ZWUiXX0.lJYodGNLDV5FWj59bZjHBmo4PFQbEUSb0AqUjhUGhZ3HqK4cT3pf0aSjRNO_aVv306IU_brHQVdYnQvWlfW4QG2HGwLYD7k9DvKCFV9wFzTS8Fu-6sJNaEp3bzTA_Sa-X-K5r9zVNigHJOTAw--IBNIOfeuhHKA57bc6FS3ofpXUsJU-UWRG7BM-MCZ-oo4xw3AdBzXe5q0vXnj8TNfcysYhPwadR_1S4vejb-DytnGJw-g7vVdcjD67wtLdhI6gzjhfFDutJjjvunQ8mlhJAiI55L0grm1wVuqZ_FGZkqJ4D93rMr0WozXrqUbjD5C3ggaVJbP48kKdZxCUuuQIXw"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5001/api/customer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"customer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Employees",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": " Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImUyZmViMTIzMzhiMWI5MmJjYzVkMGZiMjNhZDQ3ZjdkIiwidHlwIjoiSldUIn0.eyJuYmYiOjE1Mzc4NjUzMzIsImV4cCI6MTUzNzg2NTM5MiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAwIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NTAwMC9yZXNvdXJjZXMiLCJNeVdlYkFQSSJdLCJjbGllbnRfaWQiOiJqb3NlcGgxIiwic2NvcGUiOlsiTXlXZWJBUEkuZW1wbG95ZWUiXX0.lJYodGNLDV5FWj59bZjHBmo4PFQbEUSb0AqUjhUGhZ3HqK4cT3pf0aSjRNO_aVv306IU_brHQVdYnQvWlfW4QG2HGwLYD7k9DvKCFV9wFzTS8Fu-6sJNaEp3bzTA_Sa-X-K5r9zVNigHJOTAw--IBNIOfeuhHKA57bc6FS3ofpXUsJU-UWRG7BM-MCZ-oo4xw3AdBzXe5q0vXnj8TNfcysYhPwadR_1S4vejb-DytnGJw-g7vVdcjD67wtLdhI6gzjhfFDutJjjvunQ8mlhJAiI55L0grm1wVuqZ_FGZkqJ4D93rMr0WozXrqUbjD5C3ggaVJbP48kKdZxCUuuQIXw"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5001/api/employees",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"employees"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WApi.Controllers
 {
-    [Authorize]
+    //solo los clientes que tengan el scope al cual hace referencia esta policy (protectedScopeEmployee), podràn acceder a este end point
+    [Authorize(Policy = "protectedScopeEmployee")]
     [Route("api/[controller]")]
     public class EmployeeController : Controller
     {
@@ -12,14 +13,14 @@ namespace WApi.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "employee1", "employee2", "employee3" };
         }
 
-        // GET api/values/5
+        // GET api/employee/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            return "value";
+            return "employee" + id.ToString();
         }
 
         // POST api/values

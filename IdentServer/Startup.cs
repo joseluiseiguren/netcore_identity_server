@@ -9,10 +9,25 @@ namespace IdentServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
+
             services.AddIdentityServer()
-               .AddDeveloperSigningCredential()
-               .AddInMemoryApiResources(Config.GetApiResources()) //lista de recursos a proteger
-               .AddInMemoryClients(Config.GetClients()); //lista de clientes, con user/password/allowed recources to consume               
+
+                //Creates temporary key material for signing tokens (tempkey.rsa)
+                //This might be useful to get started, but needs to be replaced by some persistent key material for production scenarios
+                .AddDeveloperSigningCredential()
+
+                //lista de identity resources (in-memory) a proteger
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+
+                //lista de recursos (in-memory) a proteger
+                .AddInMemoryApiResources(Config.GetApiResources())
+
+                //lista de clientes (in-memory), con user/password/allowed recources to consume
+                .AddInMemoryClients(Config.GetClients())
+
+                //lista de usuarios (in-memory)
+                .AddTestUsers(Config.GetUsers());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -24,6 +39,10 @@ namespace IdentServer
             }
 
             app.UseIdentityServer();
+
+            //for login UI
+            app.UseStaticFiles();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

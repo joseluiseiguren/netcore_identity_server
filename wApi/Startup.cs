@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,17 +19,27 @@ namespace WApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvcCore()
-                .AddAuthorization()
+                
+                //policy para securizar el endpoint de Employees
+                .AddAuthorization(options => options.AddPolicy("protectedScopeEmployee", policy =>
+                {
+                    policy.RequireClaim("scope", "MyWebAPI.employee");
+                }))
+                
+                //policy para securizar el endpoint de Customers
+                .AddAuthorization(options => options.AddPolicy("protectedScopeCustomer", policy =>
+                {
+                    policy.RequireClaim("scope", "MyWebAPI.customer");                    
+                }))
                 .AddJsonFormatters();
 
-            services.AddAuthentication("Bearer")
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "http://localhost:54261"; //url del identity server
+                    options.Authority = "http://localhost:5000"; //url del identity server
                     options.RequireHttpsMetadata = false;
-
-                    options.ApiName = "APIEmployee"; //scopes o recursos que va a exigir que el access token tenga para consumir esta api                    
-                });
+                    options.ApiName = "MyWebAPI"; //identificador de la webapi                    
+                });                
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,7 +50,7 @@ namespace WApi
                 app.UseDeveloperExceptionPage();
             }
 
-            //adds the authentication middleware to the pipeline
+            //adds the authentication middleware to the pipeline so authentication will be performed automatically on every call into the host.
             app.UseAuthentication();
 
             app.UseMvc();
