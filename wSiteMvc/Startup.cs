@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,10 +10,10 @@ namespace wSiteMvc
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this._configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration _configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -37,7 +33,7 @@ namespace wSiteMvc
             {
                 options.SignInScheme = "Cookies";
 
-                options.Authority = "http://localhost:5000"; //Identity Server endpoint
+                options.Authority = this._configuration.GetSection("urlsConfiguration")["identityServer"]; //Identity Server endpoint
                 options.RequireHttpsMetadata = false;
                 options.ClientId = "mvc";
                 options.SaveTokens = true; //to persist the tokens from IdentityServer in the cookie

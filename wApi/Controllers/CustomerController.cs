@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace wApi.Controllers
 {
@@ -9,10 +10,20 @@ namespace wApi.Controllers
     [Route("api/Customer")]
     public class CustomerController : Controller
     {
+        public CustomerController(ILogger<CustomerController> logger)
+        {
+            this._logger = logger;
+        }
+
+        //para loguear en el logger seteado en el program.cs
+        private readonly ILogger<CustomerController> _logger;
+
         // GET api/values
         [HttpGet]
         public IEnumerable<string> Get()
         {
+            this._logger.LogInformation("Call To Method: " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             return new string[] { "cutomer1", "cutomer2", "cutomer3" };
         }
 

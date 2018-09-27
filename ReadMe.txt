@@ -59,6 +59,39 @@ PRUEBAS Client Credentials
 		- http://localhost:5001/api/customer
 		- authorization: Basic am9zZXBoMjpwZXBl
 
+		
+LOGGING
+-------
+	- Se utiliza NLog
+
+
+Enviroment Variables
+--------------------
+	Desde PowerShell:
+		$Env:ASPNETCORE_ENVIRONMENT = "Development" ---> dura solo por la session del power shell
+		[Environment]::SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development", "User") ---> para que se impacten los cambios hay que cerrar el power shell y volver a abrirlo
+	Tips
+		- Para utilizar (por ejemplo) el connection string de la variable de entorno, y no desde el archivo "appsettings.json", solo basta con crear una variable de entorno con el mismo nombre
+			[Environment]::SetEnvironmentVariable("ConnectionStrings:users_and_clients_database", "string de conexion de produccion", "User")
+			[Environment]::SetEnvironmentVariable("ConnectionStrings:users_and_clients_database", $null, "User") --> elimina la variable de entorno y la app vuelve a usar el connection srting del archivo "appsettings.json"
+
+
+Publish
+-------
+	Desde una consola:
+	Parametro 1: -c -> configuration
+	Parametro 2: -o -> output direcotry (si no exsiste lo crea)
+	Parametro 3: proyecto que queremos publicar
+	Ejemplo:
+		dotnet publish -c Release -o Publish IdentServer/IdentServer.csproj
+
+
+
+Ejecutar Aplicación
+-------------------
+	Desde una consola
+	Pararse en la carpeta de publicacion
+		dotnet .\IdentServer.dll
 
 
 Resources

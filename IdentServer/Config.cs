@@ -1,6 +1,8 @@
-﻿using IdentityServer4;
+﻿using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Security.Claims;
 
@@ -8,8 +10,16 @@ namespace IdentServer
 {
     public class Config
     {
+        public Config(IConfiguration configuration)
+        {
+            this._configuration = configuration;
+        }
+
+        //para acceder al archivo de configuracion "appsettings.json"
+        public IConfiguration _configuration { get; }
+
         //InMemory resources list
-        public static IEnumerable<ApiResource>GetApiResources()
+        public IEnumerable<ApiResource>GetApiResources()
         {
             return new List<ApiResource>
             {
@@ -38,7 +48,7 @@ namespace IdentServer
         }
 
         //InMemory clients list
-        public static IEnumerable<Client>GetClients()
+        public IEnumerable<Client>GetClients()
         {
             return new List<Client>
             {
@@ -94,32 +104,65 @@ namespace IdentServer
                     AllowedScopes = { "APIEmployee" }
                 },
 
-                // Web Site MVC a proteger con login
+                // Web Site 1 -> a proteger con login
                 new Client
                 {
                     ClientId = "mvc",
-                    ClientName = "MVC Client",
+                    ClientName = "Web Site Client 1",
                     AllowedGrantTypes = GrantTypes.Implicit,
 
                     // where to redirect to after login
-                    RedirectUris = { "http://localhost:5003/signin-oidc" },
+                    RedirectUris = { this._configuration.GetSection("urlsConfiguration")["redirectWebSite1"] },
 
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = { "http://localhost:5003/signout-callback-oidc" },
+                    PostLogoutRedirectUris = { this._configuration.GetSection("urlsConfiguration")["logoutWebSite1"] },
 
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
-                    }
+                        IdentityServerConstants.StandardScopes.Profile,
+                    },
+
+                    //no muestra la pantalla de consentimiento
+                    RequireConsent = false,
+
+                    AlwaysSendClientClaims = true
+                },
+
+                // Web Site 2 -> a proteger con login
+                new Client
+                {
+                    ClientId = "mvc2",
+                    ClientName = "Web Site Client 2",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+
+                    // where to redirect to after login
+                    RedirectUris = { this._configuration.GetSection("urlsConfiguration")["redirectWebSite2"] },
+
+                    // where to redirect to after logout
+                    PostLogoutRedirectUris = { this._configuration.GetSection("urlsConfiguration")["logoutWebSite2"] },
+
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        "role"
+                    },
+
+                    //no muestra la pantalla de consentimiento
+                    RequireConsent = false,
+
+                    AlwaysSendClientClaims = true
+
                 }
             };
         }
 
         //InMemory users list
-        public static List<TestUser> GetUsers()
+        public List<TestUser> GetUsers()
         {
-            return new List<TestUser>
+            var lstUsers = new List<TestUser>
             {
                 new TestUser
                 {
@@ -129,8 +172,10 @@ namespace IdentServer
                     Claims = new []
                     {
                         new Claim("name", "Alice"),
-                        new Claim("website", "https://alice.com")
-                    }
+                        new Claim("website", "https://alice.com"),
+                        new Claim(JwtClaimTypes.Role, "Admin")
+                    },
+                    IsActive = true
                 },
                 new TestUser
                 {
@@ -140,19 +185,24 @@ namespace IdentServer
                     Claims = new []
                     {
                         new Claim("name", "Bob"),
-                        new Claim("website", "https://bob.com")
-                    }
+                        new Claim("website", "https://bob.com"),
+                        new Claim(JwtClaimTypes.Role, "user")
+                    },
+                    IsActive = true
                 }
             };
+
+            return lstUsers;
         }
 
         //InMemory identity resources
-        public static IEnumerable<IdentityResource> GetIdentityResources()
+        public IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new List<IdentityResource>
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile()
+                new IdentityResources.Profile(),
+                new IdentityResources.Email()                
             };
         }
     }

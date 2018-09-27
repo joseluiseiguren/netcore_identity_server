@@ -1,14 +1,32 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace IdentServer
 {
     public class Startup
     {
+        public Startup(IConfiguration configuration, 
+                       ILogger<Startup> logger)
+        {
+            this._configuration = configuration;
+            this._logger = logger;            
+        }
+
+        //para acceder al archivo de configuracion "appsettings.json"
+        public IConfiguration _configuration { get; }
+
+        //para loguear en el logger seteado en el program.cs
+        private readonly ILogger<Startup> _logger;
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //read in-memory configuration
+            var inMemory = new Config(this._configuration);
+
             services.AddMvc();
 
             services.AddIdentityServer()
@@ -18,25 +36,31 @@ namespace IdentServer
                 .AddDeveloperSigningCredential()
 
                 //lista de identity resources (in-memory) a proteger
-                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                .AddInMemoryIdentityResources(inMemory.GetIdentityResources())
 
                 //lista de recursos (in-memory) a proteger
-                .AddInMemoryApiResources(Config.GetApiResources())
+                .AddInMemoryApiResources(inMemory.GetApiResources())
 
                 //lista de clientes (in-memory), con user/password/allowed recources to consume
-                .AddInMemoryClients(Config.GetClients())
+                .AddInMemoryClients(inMemory.GetClients())
 
                 //lista de usuarios (in-memory)
-                .AddTestUsers(Config.GetUsers());
+                .AddTestUsers(inMemory.GetUsers());
+
+            //ejemplo de como leer una cadena de conexion a la base de datos, del archivo de configuracion "appsettings.json"
+            var databaseConnectionString = this._configuration.GetConnectionString("users_and_clients_database");
+            this._logger.LogDebug("Connection String from appsettings.json: " + databaseConnectionString );            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            this._logger.LogDebug("Enviroment: " + env.EnvironmentName);
+
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-            }
+                app.UseDeveloperExceptionPage();                
+            }            
 
             app.UseIdentityServer();
 
