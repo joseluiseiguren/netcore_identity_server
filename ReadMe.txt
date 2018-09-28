@@ -1,9 +1,7 @@
 
 Ejemplo de IdentityServer para:
-	- Validar Clientes (Client Credentials)
-	- Entregar AccessToken a Clientes
-	- Securizar WebApi
-	- Validar Usuarios
+	- Validar Clientes (Client Credentials) -> aplicaciones que quieren consumir la webapi
+	- Validar Usuarios -> usuarios que quieren hacer login en cualquiera de los 2 websites
 
 
 IDENTITY SERVER
@@ -58,6 +56,18 @@ PRUEBAS Client Credentials
 	Usuario Joseph2, accesos
 		- http://localhost:5001/api/customer
 		- authorization: Basic am9zZXBoMjpwZXBl
+
+
+PRUEBAS Usuarios Login
+----------------------
+	Usuario alice
+		- Tiene rol admin1 y puede ingresar a los 2 websites
+		- http://localhost:5002
+		- http://localhost:5003		
+
+	Usuario bob
+		- Tiene rol user1 y solo puede ingresar al website:
+		- http://localhost:5002		
 
 		
 LOGGING

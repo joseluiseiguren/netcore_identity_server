@@ -1,7 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using NLog.Web;
+using Microsoft.Extensions.Logging;
 
 namespace wSiteMvc
 {
@@ -9,7 +12,23 @@ namespace wSiteMvc
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            // NLog: setup the logger first to catch all errors
+            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            try
+            {
+                logger.Debug("init main");
+                BuildWebHost(args).Run();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Stopped program because of exception");
+                throw;
+            }
+            finally
+            {
+                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+                NLog.LogManager.Shutdown();
+            }            
         }
 
         public static IWebHost BuildWebHost(string[] args)
@@ -25,6 +44,12 @@ namespace wSiteMvc
                                 .UseConfiguration(config)
                                 .UseContentRoot(Directory.GetCurrentDirectory())
                                 .UseStartup<Startup>()
+                                .ConfigureLogging(logging =>
+                                {
+                                    logging.ClearProviders();
+                                    logging.SetMinimumLevel(LogLevel.Trace);
+                                })
+                                .UseNLog()
                                 .Build();
 
             return host;

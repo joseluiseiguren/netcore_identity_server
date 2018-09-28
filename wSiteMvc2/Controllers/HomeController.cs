@@ -8,17 +8,19 @@ using wSiteMvc2.Models;
 
 namespace wSiteMvc2.Controllers
 {
-    //[Authorize(Policy = "policyadmin")]
-    [Authorize]
+    //solo admin's pueden ingresar a este controller
+    [Authorize(Policy = "policyadmin")]
     public class HomeController : Controller
     {
         public IActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                var u = User.Identities.ToList()[0].Claims;
-                var x = 1;
-            }
+            //get user name
+            var name = User.Claims.ToList().Where(p => p.Type.Equals("name", System.StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault().Value;
+            ViewBag.UserName = name;
+
+            //get user role
+            var role = User.Claims.ToList().Where(p => p.Type.Equals("role", System.StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault().Value;
+            ViewBag.UserRole = role;
 
             return View();
         }

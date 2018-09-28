@@ -45,7 +45,7 @@ namespace IdentServer
                 .AddInMemoryClients(inMemory.GetClients())
 
                 //lista de usuarios (in-memory)
-                .AddTestUsers(inMemory.GetUsers());
+                .AddTestUsers(inMemory.GetUsers());                
 
             //ejemplo de como leer una cadena de conexion a la base de datos, del archivo de configuracion "appsettings.json"
             var databaseConnectionString = this._configuration.GetConnectionString("users_and_clients_database");

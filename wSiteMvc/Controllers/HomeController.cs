@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -7,11 +8,20 @@ using wSiteMvc.Models;
 
 namespace wSiteMvc.Controllers
 {
-    [Authorize]
+    //solo admin's y user's roles pueden ingresar a este controller
+    [Authorize(Policy = "policyuser")]
     public class HomeController : Controller
     {
         public IActionResult Index()
         {
+            //get user name
+            var name = User.Claims.ToList().Where(p => p.Type.Equals("name", System.StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault().Value;
+            ViewBag.UserName = name;
+
+            //get user role
+            var role = User.Claims.ToList().Where(p => p.Type.Equals("role", System.StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault().Value;
+            ViewBag.UserRole = role;
+
             return View();
         }
 

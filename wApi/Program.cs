@@ -51,7 +51,7 @@ namespace WApi
                                         logging.ClearProviders();
                                         logging.SetMinimumLevel(LogLevel.Trace);
                                     })
-                                    .UseNLog()                                    
+                                    .UseNLog()
                                     .Build();
 
             return host;

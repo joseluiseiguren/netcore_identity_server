@@ -1,9 +1,13 @@
 ﻿using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace WApi
 {
@@ -46,7 +50,32 @@ namespace WApi
                     options.Authority = "http://localhost:5000"; //url del identity server
                     options.RequireHttpsMetadata = false;
                     options.ApiName = "MyWebAPI"; //identificador de la webapi                    
-                });
+
+                    //todos los eventos que se suceden al realizar un pediddo a la webapi
+                    options.JwtBearerEvents = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = x =>
+                        {
+                            Debug.WriteLine(x);
+                            return Task.FromResult(0);
+                        },
+                        OnChallenge = x =>
+                        {
+                            Debug.WriteLine(x);
+                            return Task.FromResult(0);
+                        },
+                        OnMessageReceived = x =>
+                        {
+                            Debug.WriteLine(x);
+                            return Task.FromResult(0);
+                        },
+                        OnTokenValidated = x =>
+                        {
+                            Debug.WriteLine(x);
+                            return Task.FromResult(0);
+                        },
+                    };
+                });            
 
             this._logger.LogDebug("Finish ConfigureServices...");
         }

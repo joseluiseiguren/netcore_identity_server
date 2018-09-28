@@ -18,6 +18,18 @@ namespace IdentServer
         //para acceder al archivo de configuracion "appsettings.json"
         public IConfiguration _configuration { get; }
 
+        //InMemory identity resources
+        public IEnumerable<IdentityResource> GetIdentityResources()
+        {
+            return new List<IdentityResource>
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
+                new IdentityResources.Email(),
+                new IdentityResource { Name = "role", UserClaims = new List<string> {"role"} }
+            };
+        }
+
         //InMemory resources list
         public IEnumerable<ApiResource>GetApiResources()
         {
@@ -43,7 +55,7 @@ namespace IdentServer
                             DisplayName = "Read only access to API Customer"
                         }
                     }
-                }
+                },                
             };
         }
 
@@ -111,6 +123,11 @@ namespace IdentServer
                     ClientName = "Web Site Client 1",
                     AllowedGrantTypes = GrantTypes.Implicit,
 
+                    AllowAccessTokensViaBrowser = true,
+                    AccessTokenType = AccessTokenType.Reference,
+                    AccessTokenLifetime = 330,// 330 seconds, default 60 minutes
+                    IdentityTokenLifetime = 30,
+
                     // where to redirect to after login
                     RedirectUris = { this._configuration.GetSection("urlsConfiguration")["redirectWebSite1"] },
 
@@ -121,6 +138,8 @@ namespace IdentServer
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        "role"
                     },
 
                     //no muestra la pantalla de consentimiento
@@ -135,6 +154,11 @@ namespace IdentServer
                     ClientId = "mvc2",
                     ClientName = "Web Site Client 2",
                     AllowedGrantTypes = GrantTypes.Implicit,
+
+                    AllowAccessTokensViaBrowser = true,
+                    AccessTokenType = AccessTokenType.Reference,
+                    AccessTokenLifetime = 330,// 330 seconds, default 60 minutes
+                    IdentityTokenLifetime = 30,
 
                     // where to redirect to after login
                     RedirectUris = { this._configuration.GetSection("urlsConfiguration")["redirectWebSite2"] },
@@ -154,7 +178,6 @@ namespace IdentServer
                     RequireConsent = false,
 
                     AlwaysSendClientClaims = true
-
                 }
             };
         }
@@ -173,7 +196,7 @@ namespace IdentServer
                     {
                         new Claim("name", "Alice"),
                         new Claim("website", "https://alice.com"),
-                        new Claim(JwtClaimTypes.Role, "Admin")
+                        new Claim(JwtClaimTypes.Role, "admin1")
                     },
                     IsActive = true
                 },
@@ -186,24 +209,13 @@ namespace IdentServer
                     {
                         new Claim("name", "Bob"),
                         new Claim("website", "https://bob.com"),
-                        new Claim(JwtClaimTypes.Role, "user")
+                        new Claim(JwtClaimTypes.Role, "user1")
                     },
                     IsActive = true
                 }
             };
 
             return lstUsers;
-        }
-
-        //InMemory identity resources
-        public IEnumerable<IdentityResource> GetIdentityResources()
-        {
-            return new List<IdentityResource>
-            {
-                new IdentityResources.OpenId(),
-                new IdentityResources.Profile(),
-                new IdentityResources.Email()                
-            };
-        }
+        }        
     }
 }
