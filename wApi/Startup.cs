@@ -47,7 +47,7 @@ namespace WApi
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "http://localhost:5000"; //url del identity server
+                    options.Authority = this._configuration.GetSection("urlsConfiguration")["authority"]; //url del identity server
                     options.RequireHttpsMetadata = false;
                     options.ApiName = "MyWebAPI"; //identificador de la webapi                    
 

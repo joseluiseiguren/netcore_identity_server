@@ -1,4 +1,4 @@
 ﻿{
   //puertos que abre para recibir peticiones
-  "urls": "http://localhost:5002;http://localhost:6002"
+  "urls": "http://*:5002;http://*:6002"
 }
