@@ -25,7 +25,7 @@ namespace IdentServer
         public void ConfigureServices(IServiceCollection services)
         {
             //read in-memory configuration
-            var inMemory = new Config(this._configuration);
+            var inMemory = new Config(this._configuration);            
 
             services.AddMvc();
 
@@ -62,7 +62,7 @@ namespace IdentServer
                 app.UseDeveloperExceptionPage();                
             }            
 
-            app.UseIdentityServer();
+            app.UseIdentityServer();            
 
             //for login UI
             app.UseStaticFiles();
