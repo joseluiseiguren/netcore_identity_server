@@ -49,7 +49,14 @@ namespace IdentServer
 
             //ejemplo de como leer una cadena de conexion a la base de datos, del archivo de configuracion "appsettings.json"
             var databaseConnectionString = this._configuration.GetConnectionString("users_and_clients_database");
-            this._logger.LogDebug("Connection String from appsettings.json: " + databaseConnectionString );            
+            this._logger.LogDebug("Connection String from appsettings.json: " + databaseConnectionString );
+
+            //log startup parameters
+            this._logger.LogInformation("urlsConfiguration:redirectWebSite1: " + this._configuration.GetSection("urlsConfiguration")["redirectWebSite1"]);
+            this._logger.LogInformation("urlsConfiguration:logoutWebSite1: " + this._configuration.GetSection("urlsConfiguration")["logoutWebSite1"]);
+            this._logger.LogInformation("urlsConfiguration:redirectWebSite2: " + this._configuration.GetSection("urlsConfiguration")["redirectWebSite2"]);
+            this._logger.LogInformation("urlsConfiguration:logoutWebSite2: " + this._configuration.GetSection("urlsConfiguration")["logoutWebSite2"]);
+            this._logger.LogInformation("Logging:LogLevel:Default: " + this._configuration.GetSection("Logging:LogLevel")["Default"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
