@@ -1,0 +1,17 @@
+version: '3.2'
+services:
+    myimage1:
+        image: "joseluiseiguren/ids:release8"
+        ports:
+            - "8080:5000"
+        environment:
+            - ConnectionStrings:users_and_clients_database="este es mi connection string"
+            - urlsConfiguration:redirectWebSite1=http://localhost:9992/signin-oidc
+            - urlsConfiguration:logoutWebSite1=http://localhost:9992/signout-callback-oidc
+            - urlsConfiguration:redirectWebSite2=http://localhost:9993/signin-oidc
+            - urlsConfiguration:logoutWebSite2=http://localhost:9993/signout-callback-oidc
+            - Logging:LogLevel:Default=Information
+        volumes:
+            - type: bind
+              source: ./
+              target: /app/Logs
