@@ -25,11 +25,15 @@ namespace IdentServer
         public void ConfigureServices(IServiceCollection services)
         {
             //read in-memory configuration
-            var inMemory = new Config(this._configuration);            
+            var inMemory = new Config(this._configuration);
 
             services.AddMvc();
 
-            services.AddIdentityServer()
+            services.AddIdentityServer(opt =>
+                {
+                    opt.IssuerUri = this._configuration.GetSection("idsconfig")["issuer"];
+                    opt.PublicOrigin = this._configuration.GetSection("idsconfig")["issuer"];
+                })
 
                 //Creates temporary key material for signing tokens (tempkey.rsa)
                 //This might be useful to get started, but needs to be replaced by some persistent key material for production scenarios
@@ -57,6 +61,7 @@ namespace IdentServer
             this._logger.LogInformation("urlsConfiguration:redirectWebSite2: " + this._configuration.GetSection("urlsConfiguration")["redirectWebSite2"]);
             this._logger.LogInformation("urlsConfiguration:logoutWebSite2: " + this._configuration.GetSection("urlsConfiguration")["logoutWebSite2"]);
             this._logger.LogInformation("Logging:LogLevel:Default: " + this._configuration.GetSection("Logging:LogLevel")["Default"]);
+            this._logger.LogInformation("idsconfig:issuer: " + this._configuration.GetSection("idsconfig")["issuer"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,6 +1,6 @@
 version: '3.2'
 services:
-    myimage1:
+    containerids:
         image: "joseluiseiguren/ids:release8"
         ports:
             - "8080:5000"
@@ -11,8 +11,19 @@ services:
             - urlsConfiguration:redirectWebSite2=http://localhost:9993/signin-oidc
             - urlsConfiguration:logoutWebSite2=http://localhost:9993/signout-callback-oidc
             - Logging:LogLevel:Default=Information
-            - idsconfig:issuer=http://localhost
+            - idsconfig:issuer=http://containerids:5000
         volumes:
             - type: bind
-              source: ./
+              source: ./logids
+              target: /app/Logs
+              
+    containerwebapi:
+        image: "joseluiseiguren/wapi:release1"
+        ports:
+            - "8081:5001"
+        environment:
+            - urlsConfiguration:authority=http://containerids:5000
+        volumes:
+            - type: bind
+              source: ./logwebapi
               target: /app/Logs
