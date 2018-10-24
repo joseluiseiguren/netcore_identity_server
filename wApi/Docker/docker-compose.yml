@@ -1,0 +1,12 @@
+version: '3.2'
+services:
+    myimage1:
+        image: "joseluiseiguren/wapi:release1"
+        ports:
+            - "8081:5001"
+        environment:
+            - urlsConfiguration:authority=http://localhost:5000
+        volumes:
+            - type: bind
+              source: ./
+              target: /app/Logs

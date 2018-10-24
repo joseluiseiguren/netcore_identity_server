@@ -75,8 +75,10 @@ namespace WApi
                             return Task.FromResult(0);
                         },
                     };
-                });            
+                });
 
+            //log startup parameters
+            this._logger.LogInformation("urlsConfiguration:authority: " + this._configuration.GetSection("urlsConfiguration")["authority"]);            
             this._logger.LogDebug("Finish ConfigureServices...");
         }
 
