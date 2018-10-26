@@ -32,7 +32,7 @@ namespace IdentServer
             services.AddIdentityServer(opt =>
                 {
                     opt.IssuerUri = this._configuration.GetSection("idsconfig")["issuer"];
-                    opt.PublicOrigin = this._configuration.GetSection("idsconfig")["issuer"];
+                    opt.PublicOrigin = this._configuration.GetSection("idsconfig")["issuer"];                    
                 })
 
                 //Creates temporary key material for signing tokens (tempkey.rsa)

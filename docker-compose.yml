@@ -1,13 +1,14 @@
 version: '3.2'
 services:
+    #Configuracion de Identity Server
     containerids:
         image: "joseluiseiguren/ids:release8"
         ports:
             - "8080:5000"
         environment:
             - ConnectionStrings:users_and_clients_database="este es mi connection string"
-            - urlsConfiguration:redirectWebSite1=http://localhost:9992/signin-oidc
-            - urlsConfiguration:logoutWebSite1=http://localhost:9992/signout-callback-oidc
+            - urlsConfiguration:redirectWebSite1=http://containerwsite1:5002/signin-oidc
+            - urlsConfiguration:logoutWebSite1=http://containerwsite1:5002/signout-callback-oidc
             - urlsConfiguration:redirectWebSite2=http://localhost:9993/signin-oidc
             - urlsConfiguration:logoutWebSite2=http://localhost:9993/signout-callback-oidc
             - Logging:LogLevel:Default=Information
@@ -16,7 +17,8 @@ services:
             - type: bind
               source: ./logids
               target: /app/Logs
-              
+    
+    #Configuracion de WenApi
     containerwebapi:
         image: "joseluiseiguren/wapi:release1"
         ports:
@@ -26,4 +28,18 @@ services:
         volumes:
             - type: bind
               source: ./logwebapi
+              target: /app/Logs
+
+    #Configuracion de Web Site 1
+    containerwsite1:
+        image: "joseluiseiguren/wsite1:release1"
+        ports:
+            - "8082:5002"
+        environment:
+            - urlsConfiguration:identityServer=http://localhost:8080
+        #extra_hosts:
+        #    - "localhost:containerids"
+        volumes:
+            - type: bind
+              source: ./logwsite1
               target: /app/Logs

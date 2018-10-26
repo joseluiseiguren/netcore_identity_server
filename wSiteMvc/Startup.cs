@@ -29,8 +29,8 @@ namespace wSiteMvc
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = "Cookies";
-                options.DefaultChallengeScheme = "oidc"; //OpenID Connect scheme
-            })
+                options.DefaultChallengeScheme = "oidc"; //OpenID Connect scheme                
+            })            
             .AddCookie("Cookies")
             .AddOpenIdConnect("oidc", options =>
             {

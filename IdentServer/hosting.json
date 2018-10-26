@@ -1,4 +1,5 @@
 ﻿{
   //puertos que abre para recibir peticiones
-  "urls": "http://*:5000;http://*:6000"
+  //"urls": "http://*:5000;http://*:6000"
+  "urls": "http://*:5000"
 }

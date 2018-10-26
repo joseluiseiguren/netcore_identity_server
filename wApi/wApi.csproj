@@ -40,4 +40,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Docker\DockerFile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
