@@ -7,12 +7,15 @@ services:
             - "8080:5000"
         environment:
             - ConnectionStrings:users_and_clients_database="este es mi connection string"
-            - urlsConfiguration:redirectWebSite1=http://containerwsite1:5002/signin-oidc
-            - urlsConfiguration:logoutWebSite1=http://containerwsite1:5002/signout-callback-oidc
-            - urlsConfiguration:redirectWebSite2=http://localhost:9993/signin-oidc
-            - urlsConfiguration:logoutWebSite2=http://localhost:9993/signout-callback-oidc
+            - urlsConfiguration:redirectWebSite1=http://localhost:8082/signin-oidc
+            - urlsConfiguration:logoutWebSite1=http://localhost:8082/signout-callback-oidc
+            - urlsConfiguration:redirectWebSite2=http://localhost:8083/signin-oidc
+            - urlsConfiguration:logoutWebSite2=http://localhost:8083/signout-callback-oidc
             - Logging:LogLevel:Default=Information
-            - idsconfig:issuer=http://containerids:5000
+            - idsconfig:issuer=http://localhost:8080
+        extra_hosts:
+            #La variable de entorno HOST_IP se setea en el archivo .env (que esta a la misma altura que este archivo)
+            - "localhost:${HOST_IP}"
         volumes:
             - type: bind
               source: ./logids
@@ -24,7 +27,10 @@ services:
         ports:
             - "8081:5001"
         environment:
-            - urlsConfiguration:authority=http://containerids:5000
+            - urlsConfiguration:authority=http://localhost:8080
+        extra_hosts:
+            #La variable de entorno HOST_IP se setea en el archivo .env (que esta a la misma altura que este archivo)
+            - "localhost:${HOST_IP}"
         volumes:
             - type: bind
               source: ./logwebapi
@@ -37,9 +43,25 @@ services:
             - "8082:5002"
         environment:
             - urlsConfiguration:identityServer=http://localhost:8080
-        #extra_hosts:
-        #    - "localhost:containerids"
+        extra_hosts:
+            #La variable de entorno HOST_IP se setea en el archivo .env (que esta a la misma altura que este archivo)
+            - "localhost:${HOST_IP}"
         volumes:
             - type: bind
               source: ./logwsite1
+              target: /app/Logs
+              
+    #Configuracion de Web Site 2
+    containerwsite2:
+        image: "joseluiseiguren/wsite2:release1"
+        ports:
+            - "8083:5003"
+        environment:
+            - urlsConfiguration:identityServer=http://localhost:8080
+        extra_hosts:
+            #La variable de entorno HOST_IP se setea en el archivo .env (que esta a la misma altura que este archivo)
+            - "localhost:${HOST_IP}"
+        volumes:
+            - type: bind
+              source: ./logwsite2
               target: /app/Logs
