@@ -35,7 +35,7 @@ namespace IdentServer
 
         public static IWebHost BuildWebHost(string[] args)
         {
-            var i = 9;
+            int i = 0;
 
             var config = new ConfigurationBuilder()
                                 .SetBasePath(Directory.GetCurrentDirectory())
